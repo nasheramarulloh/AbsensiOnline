@@ -1,0 +1,146 @@
+<div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mb-4">Data Akun yang Terdaftar</h1>
+                        <hr>
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i> Tabel Akun Terdaftar
+                            </div>
+                            <div class="card-body">
+                                <table id="datatablesSimple" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Lengkap</th>
+                                            <th>Email</th>
+                                            <th>Nomor Tel</th>
+                                            <th>Tanggal Masuk</th>
+                                            <th>Opsi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $no = 1;
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo "<tr id='row_".$row['id']."'>";
+                                            echo "<td>" . $no++ . "</td>";
+                                            echo "<td>" . $row['nama_lengkap'] . "</td>";
+                                            echo "<td>" . $row['email'] . "</td>";
+                                            echo "<td>" . $row['no_telepon'] . "</td>";
+                                            echo "<td>" . $row['tanggal_masuk'] . "</td>";
+                                            echo "<td><button class='btn btn-danger btn-sm delete-btn' data-id='" . $row['id'] . "'>Hapus</button></td>";
+                                            echo "</tr>";
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+
+
+
+            <script>
+            $(document).ready(function () {
+            $(".delete-btn").click(function () {
+                let id = $(this).data("id");
+                let row = $("#row_" + id);
+
+                if (confirm("Apakah Anda yakin ingin menghapus akun ini?")) {
+                    $.post("hapus_akun.php", { id: id }, function (response) {
+                        if (response.trim() === "success") {
+                            row.fadeOut(500, function () {
+                                $(this).remove();
+                            });
+                        } else {
+                            alert("Gagal menghapus akun!");
+                        }
+                    });
+                }
+            });
+        });
+        </script>
+
+
+<?php
+include "config.php"; // Koneksi ke database
+
+$query = "SELECT id, nama_lengkap, email, no_telepon, tanggal_masuk FROM login ORDER BY tanggal_masuk DESC";
+$result = $conn->query($query);
+?>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="js/scripts.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="js/datatables-simple-demo.js"></script>
+        <script>
+        $("#datatablesSimple").on("click", ".delete-btn", function () {
+        let id = $(this).data("id");
+        let row = $(this).closest("tr");
+
+        Swal.fire({
+            title: "Apakah Anda yakin?",
+            text: "Data akan dihapus secara permanen!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Ya, hapus!",
+            cancelButtonText: "Batal"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "hapus_akun.php",
+                    type: "POST",
+                    data: { id: id },
+                    success: function (response) {
+                        if (response.trim() === "success") {
+                            Swal.fire("Berhasil!", "Akun telah dihapus.", "success").then(() => {
+                                table.row(row).remove().draw(); // Hapus baris dari DataTables
+                            });
+                        } else {
+                            Swal.fire("Gagal!", "Akun tidak dapat dihapus.", "error");
+                        }
+                    },
+                    error: function () {
+                        Swal.fire("Error!", "Terjadi kesalahan saat menghapus akun.", "error");
+                    }
+                });
+            }
+        });
+    });
+        </script>
+
+$(".dataTables_length").addClass("mb-3");
+$(".dataTables_filter").addClass("mb-3");
+
+                                <?php
+                                    include "config.php";
+                                    $sql = "SELECT * FROM login";
+                                    $result = $conn->query($sql);
+                                    $no = 1;
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo "<tr>";
+                                        echo "<td>" . $no++ . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['nama_lengkap']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['jenis_kelamin']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['no_telepon']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['tanggal_masuk']) . "</td>";
+                                        echo "<td>" . (!empty($row['tanggal_keluar']) ? htmlspecialchars($row['tanggal_keluar']) : '-') . "</td>";
+                                        echo "<td><button class='btn btn-danger btn-sm delete-btn' data-id='" . $row['id'] . "'>Hapus</button></td>";
+                                        echo "</tr>";
+                                    }
+                                    ?>
+
+
+<?php
+include "config.php"; // Koneksi ke database
+
+$query = "SELECT id, nama_lengkap, email, no_telepon, jenis_kelamin, status, tanggal_masuk FROM login ORDER BY tanggal_masuk DESC";
+$result = $conn->query($query);
+?>

@@ -1,0 +1,51 @@
+.d-flex {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Styling dropdown jumlah entries */
+#entriesSelect {
+    appearance: none;
+    background-color: white;
+    padding: 5px 30px 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-size: 14px;
+    position: relative;
+}
+
+/* Pindahkan pencarian ke kanan */
+.search-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+}
+/* Sembunyikan search bawaan DataTables */
+div.dataTables_filter {
+display: none !important;
+}
+
+/* Sembunyikan dropdown jumlah entri bawaan DataTables */
+div.dataTables_length {
+display: none !important;
+}
+
+button:focus, 
+button:active,
+.form-control:focus, 
+.form-select:focus {
+outline: none !important;
+box-shadow: none !important;
+}
+
+.search-input{
+justify-content: flex-end;
+justify-content: right;
+}
+
+.form-select{
+    width: auto;
+}
